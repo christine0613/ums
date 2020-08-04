@@ -48,9 +48,8 @@ def add_users():
             db.session.add(add_user)
             db.session.commit()
         else: 
-            message = jsonify({"message": "User email already existed"})
-            return redirect(url_for('homepage', message=message))
-        
+            message = jsonify({"message": "User email already existed. Please go back and try again"})
+            return message
     return redirect(request.referrer)
 
 @app.route("/update_users", methods=["POST"])
@@ -64,12 +63,17 @@ def update_users():
 
         dob = time.mktime(datetime.datetime.strptime(dobDate, "%Y-%M-%d").timetuple())
 
-        userUpdate = Users.query.filter_by(userID=userID).first()
-        userUpdate.firstName = firstName
-        userUpdate.lastName = lastName
-        userUpdate.email = email
-        userUpdate.dob = dob    
-        db.session.commit()
+        user = Users.query.filter_by(email=email).first()
+        if not user:
+            userUpdate = Users.query.filter_by(userID=userID).first()
+            userUpdate.firstName = firstName
+            userUpdate.lastName = lastName
+            userUpdate.email = email
+            userUpdate.dob = dob    
+            db.session.commit()
+        else:
+            message = jsonify({"message": "User email already existed. Please go back and try again"})
+            return message
     return redirect(request.referrer)    
 
 @app.route("/delete_users/<string:userID>")
