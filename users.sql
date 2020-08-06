@@ -6,5 +6,5 @@ CREATE TABLE if not exists users
 firstName varchar(100) not null,
 lastName varchar(100) not null,
 email varchar(100) not null,
-dob int(10) not null,
-CONSTRAINT users_pk primary key(id) ) ENGINE=INNODB DEFAULT charset=latin1;
+dob int not null,
+CONSTRAINT users_pk primary key(userID) ) ENGINE=INNODB DEFAULT charset=latin1;

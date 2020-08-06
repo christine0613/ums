@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask import Flask, request, render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for, session
 from flask_cors import CORS
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,7 @@ import requests
 
 model = None
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/userSystem'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://ums:ums123456@database-ums-2.cel29riokjfx.us-east-1.rds.amazonaws.com:3306/ums'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
@@ -38,7 +38,7 @@ def add_users():
     if request.method == "POST":
         firstName = request.form['addFirstName'].strip().capitalize()
         lastName = request.form['addLastName'].strip().capitalize()
-        email = request.form['addEmail'].strip()
+        email = request.form['addEmail'].strip().lower()
         dobDate = request.form['addDob']
 
         dob = time.mktime(datetime.datetime.strptime(dobDate, "%Y-%M-%d").timetuple())
@@ -58,7 +58,7 @@ def update_users():
         userID = request.form['updateID']
         firstName = request.form['updateFirstName'].strip().capitalize()
         lastName = request.form['updateLastName'].strip().capitalize()
-        email = request.form['updateEmail'].strip()
+        email = request.form['updateEmail'].strip().lower()
         dobDate = request.form['updateDob']
 
         dob = time.mktime(datetime.datetime.strptime(dobDate, "%Y-%M-%d").timetuple())
@@ -81,6 +81,12 @@ def delete_users(userID):
     Users.query.filter_by(userID=userID).delete()
     db.session.commit()
     return redirect(request.referrer)
+
+# @app.route("/search_users", methods=["POST"])
+# def search_users():
+#     email = request.form['searchEmail'].strip().lower()
+#     userResult = Users.query.filter_by(email=email).first()
+#     return render_template("index.html", userResult=userResult)
 
 @app.route("/", methods=["GET", "POST"])
 def homepage():
