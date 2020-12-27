@@ -9,7 +9,7 @@ import requests
 
 model = None
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://ums:ums123456@database-ums-2.cel29riokjfx.us-east-1.rds.amazonaws.com:3306/ums'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://your_own_database_connection'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
